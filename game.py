@@ -118,9 +118,9 @@ def check_collision(player, walls):
      return False
 
 
-def check_collision2(player, walls2):
+def check_collision2(player2, walls2):
      for wall in walls2:
-        if player.colliderect(wall):
+        if player2.colliderect(wall):
             return True
      return False
 
@@ -194,82 +194,86 @@ while running:
             message = font.render("LEVEL 1 COMPLETE!", True, BLACK)
             screen.blit(message, (250, 300))
 
-            if not won2:
+        if not won2:
+            # Check for events
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
 
-                keys2 = pygame.key.get_pressed()
+            keys2 = pygame.key.get_pressed()
 
-                if keys2[pygame.K_LEFT]:
-                    player_x -= speed
-                    player = pygame.Rect(player_x, player_y, player_size, player_size)
-                
-                    if check_collision2(player,walls) == True:
-                        player_x += speed
-
-
-                if keys2[pygame.K_RIGHT]:
-                    player_x += speed
-                    player = pygame.Rect(player_x, player_y, player_size, player_size)
+            if keys2[pygame.K_LEFT]:
+                player_x2 -= speed
+                player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
             
-                    if check_collision2(player,walls) == True:
-                        player_x -= speed
+                if check_collision2(player,walls) == True:
+                    player_x2 += speed
 
 
-                if keys2[pygame.K_UP]:
-                    player_y -= speed
-                    player = pygame.Rect(player_x, player_y, player_size, player_size)
-                
-                    if check_collision2(player,walls) == True:
-                        player_y += speed
-
-
-                if keys2[pygame.K_DOWN]:
-                    player_y += speed
-                    player = pygame.Rect(player_x, player_y, player_size, player_size)
-            
-                    if check_collision2(player,walls) == True:
-                        player_y -= speed
-
-
-                if player_x < 0:
-                    player_x = 0
-                
-                if player_x > SCREEN_WIDTH2 - player_size:
-                    player_x = SCREEN_WIDTH2 - player_size
+            if keys2[pygame.K_RIGHT]:
+                player_x2 += speed
+                player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
         
-                if player_y < 0:
-                    player_y = 0
-                
-                if player_y > SCREEN_HEIGHT2 - player_size:
-                    player_y = SCREEN_HEIGHT2 - player_size
-                
-                # Update the player rectangle
-                player = pygame.Rect(player_x, player_y, player_size, player_size)
-                
-                # Check if the player reaches the exit
-                if player.colliderect(exit_rect2):
-                    won2 = True
-                    font = pygame.font.SysFont(None, 48)
-                    message = font.render("LEVEL 2 COMPLETE!", True, BLACK)
-                    screen.blit(message, (250, 300))
+                if check_collision2(player,walls) == True:
+                    player_x2-= speed
 
-            screen.fill(WHITE)
-                
-            for wall in walls2:
-                pygame.draw.rect(screen, LAVENDER, wall)
-                
-            pygame.draw.rect(screen, GREEN, exit_rect2)
-                
-            player = pygame.Rect(player_x2, player_y2, player_size, player_size)
-            pygame.draw.rect(screen, DARK_BLUE, player)
 
-            # Update the display
-            pygame.display.flip()
+            if keys2[pygame.K_UP]:
+                player_y2 -= speed
+                player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
+            
+                if check_collision2(player,walls) == True:
+                    player_y2 += speed
+
+
+            if keys2[pygame.K_DOWN]:
+                player_y2 += speed
+                player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
+        
+                if check_collision2(player,walls) == True:
+                    player_y2 -= speed
+
+
+            if player_x2 < 0:
+                player_x2 = 0
                 
-            # Limit the game to 60 FPS
-            clock.tick(60)
+            if player_x2 > SCREEN_WIDTH - player_size:
+                player_x2 = SCREEN_WIDTH - player_size
+        
+            if player_y2 < 0:
+                player_y2 = 0
+                
+            if player_y2 > SCREEN_HEIGHT - player_size:
+                player_y2 = SCREEN_HEIGHT - player_size
+                
+            # Update the player rectangle
+            player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
+                
+            # Check if the player reaches the exit
+            if player2.colliderect(exit_rect2):
+                won2 = True
+                font = pygame.font.SysFont(None, 48)
+                message = font.render("LEVEL 2 COMPLETE!", True, BLACK)
+                screen.blit(message, (250, 300))
+
+        screen.fill(WHITE)
+                
+        for wall in walls2:
+            pygame.draw.rect(screen, LAVENDER, wall)
+                
+        pygame.draw.rect(screen, GREEN, exit_rect2)
+                
+        player2 = pygame.Rect(player_x2, player_y2, player_size, player_size)
+        pygame.draw.rect(screen, DARK_BLUE, player)
+
+        # Update the display
+        pygame.display.flip()
+                
+        # Limit the game to 60 FPS
+        clock.tick(60)
 
      # Draw the background
-        screen.fill(WHITE)
+    screen.fill(WHITE)
     
     # Draw the maze walls
     for wall in walls:
