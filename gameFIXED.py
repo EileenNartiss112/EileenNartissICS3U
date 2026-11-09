@@ -15,9 +15,15 @@ pygame.display.set_caption("Maze Games!")
 # Set up colours
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
+
 LAVENDER = (182, 159, 255)
+BUTTER_YELLOW = (251, 231, 164)
+SALMON = (255, 135, 160)
+TANGERINE = (255, 159, 82)
 PURPLE = (98, 59, 190)
+
 GREEN = (27, 255, 105)
+RED = (233, 66, 69)
 DARK_BLUE = (15, 5, 72)
 
 # Set up player variables
@@ -31,6 +37,7 @@ player_y = 30
 # Exits for each level
 exit_rect_1 = pygame.Rect(740, 340, 30, 30)
 exit_rect_2 = pygame.Rect(750, 325, 30, 30)
+exit_rect_3 = pygame.Rect(750, 50, 30, 30)
 
 # Level 1 Walls
 walls_level1 = [
@@ -95,6 +102,55 @@ walls_level2 = [
     pygame.Rect(675, 625, 20, 75),
     pygame.Rect(675, 550, 150, 20)
 ]
+# Level 3 Walls
+walls_level3 = [
+    pygame.Rect(0, 50, 95, 20),
+    pygame.Rect(0, 200, 95, 20),
+    pygame.Rect(95, 200, 20, 75),
+    pygame.Rect(95, 275, 75, 20),
+    pygame.Rect(95, 125, 375, 20),
+    pygame.Rect(95, 350, 20, 75),
+    pygame.Rect(95, 350, 150, 20),
+    pygame.Rect(95, 500, 20, 150),
+    pygame.Rect(95, 650, 150, 20),
+    pygame.Rect(170, 0, 20, 200),
+    pygame.Rect(170, 350, 75, 20),
+    pygame.Rect(170, 425, 75, 20),
+    pygame.Rect(170, 500, 150, 20),
+    pygame.Rect(170, 575, 650, 20),
+    pygame.Rect(245, 50, 75, 20),
+    pygame.Rect(245, 125, 20, 320),
+    pygame.Rect(245, 650, 20, 75),
+    pygame.Rect(320, 0, 20, 70),
+    pygame.Rect(320, 200, 75, 20),
+    pygame.Rect(320, 200, 20, 150),
+    pygame.Rect(320, 350, 75, 20),
+    pygame.Rect(320, 425, 20, 225),
+    pygame.Rect(395, 50, 20, 75),
+    pygame.Rect(395, 275, 20, 225),
+    pygame.Rect(395, 500, 75, 20),
+    pygame.Rect(395, 275, 300, 20),
+    pygame.Rect(395, 650, 75, 20),
+    pygame.Rect(395, 650, 20, 75),
+    pygame.Rect(470, 0, 20, 70),
+    pygame.Rect(470, 125, 20, 150),
+    pygame.Rect(470, 350, 150, 20),
+    pygame.Rect(470, 350, 20, 75),
+    pygame.Rect(470, 425, 75, 20),
+    pygame.Rect(545, 50, 20, 150),
+    pygame.Rect(545, 200, 75, 20),
+    pygame.Rect(545, 425, 20, 75),
+    pygame.Rect(545, 650, 75, 20),
+    pygame.Rect(545, 650, 20, 75),
+    pygame.Rect(620, 0, 20, 220),
+    pygame.Rect(620, 350, 20, 225),
+    pygame.Rect(695, 50, 20, 300),
+    pygame.Rect(695, 425, 150, 20),
+    pygame.Rect(695, 425, 20, 75),
+    pygame.Rect(695, 650, 150, 20)
+    
+
+]
 
 # Game state
 clock = pygame.time.Clock()
@@ -111,11 +167,6 @@ def check_collision(player_rect, wall_list):
             return True
     return False
 
-def check_collision2(player2, walls2):
-     for wall in walls2:
-        if player2.colliderect(wall):
-            return True
-     return False
 
 
 while running:
@@ -130,9 +181,12 @@ while running:
     if current_level == 1:
         active_walls = walls_level1
         active_exit = exit_rect_1
-    else:
-        active_walls = walls_level2
+    elif current_level == 2:
+        activewalls = walls_level2
         active_exit = exit_rect_2
+    elif current_level == 3:
+        active_walls = walls_level3
+        active_exit = exit_rect_3
 
     if game_won == False:
         if keys[pygame.K_LEFT]:
@@ -175,13 +229,24 @@ while running:
                 current_level = 2
                 player_x = 20
                 player_y = 350
+            elif current_level == 2:
+                current_level = 3
+                player_x = 20
+                player_y = 350
             else:
                 game_won = True
 
 
     screen.fill(WHITE)
 
-    wall_color = PURPLE if current_level == 1 else LAVENDER
+    
+    if current_level == 1: 
+        wall_color = PURPLE
+    elif current_level == 2:
+        wall_color = LAVENDER
+    elif current_level == 3:
+        wall_color = TANGERINE
+
     for wall in active_walls:
         pygame.draw.rect(screen, wall_color, wall)
 
@@ -193,7 +258,7 @@ while running:
     pygame.draw.rect(screen, DARK_BLUE, player_rect)
 
     if game_won:
-        message = font.render("YOU WIN BOTH LEVELS!", True, BLACK)
+        message = font.render("YOU WIN ALL LEVELS!", True, BLACK)
         screen.blit(message, (220, 300))
 
     # Update display
