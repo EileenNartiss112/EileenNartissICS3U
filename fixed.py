@@ -18,7 +18,7 @@ BLACK = (0, 0, 0)
 
 LAVENDER = (182, 159, 255) #Level 2 + 5
 BUTTER_YELLOW = (251, 231, 164) #power up
-SALMON = (255, 135, 160) #enemy power down
+SALMON = (255, 135, 160) #power down
 TANGERINE = (255, 159, 82) #Level 3 + 6
 PURPLE = (98, 59, 190) #Level 1 + 4
 
@@ -32,22 +32,24 @@ speed = 4
 
 # Set up enemy variables
 enemy_size = 20
-enemy_speed = 3
+enemy_speed = 0.5
 
 enemy_x = 0
-enemy_y = 30
+enemy_y = 0
 
 # Starting position
-player_x = 30
-player_y = 30
+player_x = 40
+player_y = 40
 
-power_up_1 = pygame.Rect(250, 250, 20, 20)
-power_up_2 = pygame.Rect(250, 250, 20, 20)
-power_up_3 = pygame.Rect(250, 250, 20, 20)
+power_upx = 250
+power_upy = 250
+power_downx = 250
+power_downy = 250
+power_size = 15
 
-power_down_1 = pygame.Rect(200, 250, 20, 20)
-power_down_2 = pygame.Rect(200, 250, 20, 20)
-power_down_3 = pygame.Rect(200, 250, 20, 20)
+active_power_up = pygame.Rect(power_upx, power_upy, power_size, power_size)
+active_power_down = pygame.Rect(power_downx, power_downy, power_size, power_size)
+
 
 # Exits for each level
 exit_rect_1 = pygame.Rect(740, 340, 30, 30)
@@ -181,12 +183,17 @@ def check_collision(player_rect, wall_list):
             return True
     return False
 
-def check_enemy_collision(player_rect, enemy_rect):
-    if player_rect.colliderect(enemy_rect):
+def check_enemy_collision(enemy_rect, player_rect):
+    if enemy_rect.colliderect(player_rect):
         return True
     return False
 
 while running:
+
+    pygame.mixer.init()
+    pygame.mixer.music.load("maintheme.mp3")
+    pygame.mixer.music.play()
+
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -206,18 +213,16 @@ while running:
     elif current_level == 4:
         active_walls = walls_level1
         active_exit = exit_rect_1
-        active_power_up = power_up_1
-        active_power_down = power_down_1
+        active_power_up = (power_upx, power_upy)
     elif current_level == 5:
         active_walls = walls_level2 
         active_exit = exit_rect_2
-        active_power_up = power_up_2
-        active_power_down = power_down_2
+        active_power_up = (power_upx, power_upy)
     elif current_level == 3:
         active_walls = walls_level3
         active_exit = exit_rect_3
-        active_power_up = power_up_3
-        active_power_down = power_down_3
+        active_power_up = (power_upx, power_upy)
+        
 
 
 
@@ -229,7 +234,7 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_x += speed
 
-            if check_enemy_collision(player_rect, enemy_rect):
+            if check_enemy_collision(enemy_rect, player_rect):
                 running = False
 
 
@@ -239,7 +244,7 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_x -= speed
 
-            if check_enemy_collision(player_rect, enemy_rect):
+            if check_enemy_collision(enemy_rect, player_rect):
                 running = False
 
 
@@ -249,7 +254,7 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_y += speed
 
-            if check_enemy_collision(player_rect, enemy_rect):
+            if check_enemy_collision(enemy_rect, player_rect):
                 running = False
 
 
@@ -259,8 +264,7 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_y -= speed
 
-            if check_enemy_collision(player_rect, enemy_rect):
-
+            if check_enemy_collision(enemy_rect, player_rect):
                 running = False
 
 
@@ -302,7 +306,7 @@ while running:
             speed = 6
 
         if player_rect.colliderect(active_power_down):
-            enemy_speed = 2
+            player_speed = 3
 
         if player_rect.colliderect(active_exit):
             if current_level == 1:
@@ -310,31 +314,41 @@ while running:
                 player_x = 20
                 player_y = 350
                 enemy_x = 0
-                enemy_y = 340
+                enemy_y = 450
+                speed = 4
+                enemy_speed = 0.5
             elif current_level == 2:
                 current_level = 3
                 player_x = 20
                 player_y = 350
                 enemy_x = 0
-                enemy_y = 340
+                enemy_y = 450
+                speed = 4
+                enemy_speed = 0.5
             elif current_level == 3:
                 current_level = 4
-                player_x = 30
-                player_y = 30
+                player_x = 40
+                player_y = 40
                 enemy_x = 0
-                enemy_y = 30
+                enemy_y = 0
+                speed = 4
+                enemy_speed = 0.5
             elif current_level == 4:
                 current_level = 5
                 player_x = 20
                 player_y = 350
                 enemy_x = 0
-                enemy_y = 340
+                enemy_y = 450
+                speed = 4
+                enemy_speed = 0.5
             elif current_level == 5:
                 current_level = 6
                 player_x = 20
                 player_y = 350
                 enemy_x = 0
-                enemy_y = 340
+                enemy_y = 450
+                speed = 4
+                enemy_speed = 0.5
             else:
                 game_won = True
 
