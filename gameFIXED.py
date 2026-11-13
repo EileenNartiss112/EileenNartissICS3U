@@ -1,8 +1,13 @@
 import pygame
 import sys
 
+
 # Initialize all pygame modules
 pygame.init()
+
+#pygame.mixer. init()
+#pygame.mixer.music. load("")
+#pygame.mixer.music.play
 
 # Set screen resolution
 SCREEN_WIDTH = 800
@@ -28,7 +33,7 @@ DARK_BLUE = (15, 5, 72)
 
 # Set up player variables
 player_size = 25
-speed = 3
+speed = 5
 
 # Starting position
 player_x = 30

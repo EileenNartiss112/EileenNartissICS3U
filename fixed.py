@@ -16,23 +16,38 @@ pygame.display.set_caption("Maze Games!")
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 
-LAVENDER = (182, 159, 255)
-BUTTER_YELLOW = (251, 231, 164)
-SALMON = (255, 135, 160)
-TANGERINE = (255, 159, 82)
-PURPLE = (98, 59, 190)
+LAVENDER = (182, 159, 255) #Level 2 + 5
+BUTTER_YELLOW = (251, 231, 164) #power up
+SALMON = (255, 135, 160) #enemy power down
+TANGERINE = (255, 159, 82) #Level 3 + 6
+PURPLE = (98, 59, 190) #Level 1 + 4
 
-GREEN = (27, 255, 105)
-RED = (233, 66, 69)
-DARK_BLUE = (15, 5, 72)
+GREEN = (27, 255, 105) #exit
+RED = (233, 66, 69) #enemy
+DARK_BLUE = (15, 5, 72) #player
 
 # Set up player variables
 player_size = 25
-speed = 3
+speed = 4
+
+# Set up enemy variables
+enemy_size = 20
+enemy_speed = 3
+
+enemy_x = 0
+enemy_y = 30
 
 # Starting position
 player_x = 30
 player_y = 30
+
+power_up_1 = pygame.Rect(250, 250, 20, 20)
+power_up_2 = pygame.Rect(250, 250, 20, 20)
+power_up_3 = pygame.Rect(250, 250, 20, 20)
+
+power_down_1 = pygame.Rect(200, 250, 20, 20)
+power_down_2 = pygame.Rect(200, 250, 20, 20)
+power_down_3 = pygame.Rect(200, 250, 20, 20)
 
 # Exits for each level
 exit_rect_1 = pygame.Rect(740, 340, 30, 30)
@@ -166,6 +181,11 @@ def check_collision(player_rect, wall_list):
             return True
     return False
 
+def check_enemy_collision(player_rect, enemy_rect):
+    if player_rect.colliderect(enemy_rect):
+        return True
+    return False
+
 while running:
 
     for event in pygame.event.get():
@@ -178,11 +198,29 @@ while running:
         active_walls = walls_level1
         active_exit = exit_rect_1
     elif current_level == 2:
-        active_walls = walls_level2  # Fixed: added missing underscore
+        active_walls = walls_level2 
         active_exit = exit_rect_2
     elif current_level == 3:
         active_walls = walls_level3
         active_exit = exit_rect_3
+    elif current_level == 4:
+        active_walls = walls_level1
+        active_exit = exit_rect_1
+        active_power_up = power_up_1
+        active_power_down = power_down_1
+    elif current_level == 5:
+        active_walls = walls_level2 
+        active_exit = exit_rect_2
+        active_power_up = power_up_2
+        active_power_down = power_down_2
+    elif current_level == 3:
+        active_walls = walls_level3
+        active_exit = exit_rect_3
+        active_power_up = power_up_3
+        active_power_down = power_down_3
+
+
+
 
     if game_won == False:
         if keys[pygame.K_LEFT]:
@@ -191,11 +229,19 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_x += speed
 
+            if check_enemy_collision(player_rect, enemy_rect):
+                running = False
+
+
         if keys[pygame.K_RIGHT]:
             player_x += speed
             player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
             if check_collision(player_rect, active_walls):
                 player_x -= speed
+
+            if check_enemy_collision(player_rect, enemy_rect):
+                running = False
+
 
         if keys[pygame.K_UP]:
             player_y -= speed
@@ -203,11 +249,29 @@ while running:
             if check_collision(player_rect, active_walls):
                 player_y += speed
 
+            if check_enemy_collision(player_rect, enemy_rect):
+                running = False
+
+
         if keys[pygame.K_DOWN]:
             player_y += speed
             player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
             if check_collision(player_rect, active_walls):
                 player_y -= speed
+
+            if check_enemy_collision(player_rect, enemy_rect):
+
+                running = False
+
+
+        if enemy_x < player_x:
+            enemy_x += enemy_speed
+        elif enemy_x > player_x:
+            enemy_x -= enemy_speed
+        if enemy_y < player_y:
+            enemy_y += enemy_speed
+        elif enemy_y > player_y:
+            enemy_y -= enemy_speed
 
         if player_x < 0:
             player_x = 0
@@ -219,16 +283,58 @@ while running:
         elif player_y > SCREEN_HEIGHT - player_size:
             player_y = SCREEN_HEIGHT - player_size
 
+
+        if enemy_x < 0:
+            enemy_x = 0
+        elif enemy_x > SCREEN_WIDTH - enemy_size:
+            enemy_x = SCREEN_WIDTH - enemy_size
+        
+        if enemy_y < 0:
+            enemy_y = 0
+        elif enemy_y > SCREEN_HEIGHT - enemy_size:
+            enemy_y = SCREEN_HEIGHT - enemy_size
+        
+
         player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
+        enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+
+        if player_rect.colliderect(active_power_up):
+            speed = 6
+
+        if player_rect.colliderect(active_power_down):
+            enemy_speed = 2
+
         if player_rect.colliderect(active_exit):
             if current_level == 1:
                 current_level = 2
                 player_x = 20
                 player_y = 350
+                enemy_x = 0
+                enemy_y = 340
             elif current_level == 2:
                 current_level = 3
                 player_x = 20
                 player_y = 350
+                enemy_x = 0
+                enemy_y = 340
+            elif current_level == 3:
+                current_level = 4
+                player_x = 30
+                player_y = 30
+                enemy_x = 0
+                enemy_y = 30
+            elif current_level == 4:
+                current_level = 5
+                player_x = 20
+                player_y = 350
+                enemy_x = 0
+                enemy_y = 340
+            elif current_level == 5:
+                current_level = 6
+                player_x = 20
+                player_y = 350
+                enemy_x = 0
+                enemy_y = 340
             else:
                 game_won = True
 
@@ -240,6 +346,12 @@ while running:
         wall_color = LAVENDER
     elif current_level == 3:
         wall_color = TANGERINE
+    elif current_level == 4:
+        wall_color = PURPLE
+    elif current_level == 5:
+        wall_color = LAVENDER
+    elif current_level == 6:
+        wall_color = TANGERINE
 
     for wall in active_walls:
         pygame.draw.rect(screen, wall_color, wall)
@@ -247,9 +359,20 @@ while running:
     # Draw exit
     pygame.draw.rect(screen, GREEN, active_exit)
 
+    #Draw powerups
+    for power_up in active_power_up:
+        pygame.draw.rect(screen, BUTTER_YELLOW, active_power_up)
+
+    for power_down in active_power_down:
+        pygame.draw.rect(screen, SALMON, active_power_down)
+
     # Draw player
     player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
     pygame.draw.rect(screen, DARK_BLUE, player_rect)
+
+    #Draw enemy
+    enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+    pygame.draw.rect(screen, RED, enemy_rect)
 
     if game_won:
         message = font.render("YOU WIN ALL LEVELS!", True, BLACK)
