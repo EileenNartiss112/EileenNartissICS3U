@@ -34,17 +34,19 @@ speed = 4
 enemy_size = 20
 enemy_speed = 0.5
 
-enemy_x = 0
-enemy_y = 0
+enemy_x = 10000
+enemy_y = 10000
+
+active_enemy = (enemy_x, enemy_y)
 
 # Starting position
 player_x = 40
 player_y = 40
 
-power_upx = 250
-power_upy = 250
-power_downx = 250
-power_downy = 250
+power_upx = 100000
+power_upy = 100000
+power_downx = 10000
+power_downy = 100000
 power_size = 15
 
 active_power_up = pygame.Rect(power_upx, power_upy, power_size, power_size)
@@ -214,14 +216,18 @@ while running:
         active_walls = walls_level1
         active_exit = exit_rect_1
         active_power_up = (power_upx, power_upy)
+        active_enemy = (enemy_x, enemy_y)
     elif current_level == 5:
         active_walls = walls_level2 
         active_exit = exit_rect_2
         active_power_up = (power_upx, power_upy)
+        active_enemy = (enemy_x, enemy_y)
     elif current_level == 3:
         active_walls = walls_level3
         active_exit = exit_rect_3
         active_power_up = (power_upx, power_upy)
+        active_enemy = (enemy_x, enemy_y)
+
         
 
 
@@ -268,14 +274,35 @@ while running:
                 running = False
 
 
-        if enemy_x < player_x:
-            enemy_x += enemy_speed
-        elif enemy_x > player_x:
-            enemy_x -= enemy_speed
-        if enemy_y < player_y:
-            enemy_y += enemy_speed
-        elif enemy_y > player_y:
-            enemy_y -= enemy_speed
+        if current_level == 4:
+            if enemy_x < player_x:
+                enemy_x += enemy_speed
+            elif enemy_x > player_x:
+                enemy_x -= enemy_speed
+            if enemy_y < player_y:
+                enemy_y += enemy_speed
+            elif enemy_y > player_y:
+                enemy_y -= enemy_speed
+
+        if current_level == 5:
+            if enemy_x < player_x:
+                enemy_x += enemy_speed
+            elif enemy_x > player_x:
+                enemy_x -= enemy_speed
+            if enemy_y < player_y:
+                enemy_y += enemy_speed
+            elif enemy_y > player_y:
+                enemy_y -= enemy_speed
+
+        if current_level == 6:
+            if enemy_x < player_x:
+                enemy_x += enemy_speed
+            elif enemy_x > player_x:
+                enemy_x -= enemy_speed
+            if enemy_y < player_y:
+                enemy_y += enemy_speed
+            elif enemy_y > player_y:
+                enemy_y -= enemy_speed
 
         if player_x < 0:
             player_x = 0
@@ -313,26 +340,21 @@ while running:
                 current_level = 2
                 player_x = 20
                 player_y = 350
-                enemy_x = 0
-                enemy_y = 450
                 speed = 4
-                enemy_speed = 0.5
             elif current_level == 2:
                 current_level = 3
                 player_x = 20
                 player_y = 350
-                enemy_x = 0
-                enemy_y = 450
                 speed = 4
-                enemy_speed = 0.5
             elif current_level == 3:
                 current_level = 4
-                player_x = 40
-                player_y = 40
+                player_x = 60
+                player_y = 60
                 enemy_x = 0
                 enemy_y = 0
                 speed = 4
-                enemy_speed = 0.5
+                power_upx = 250
+                power_upy = 300
             elif current_level == 4:
                 current_level = 5
                 player_x = 20
@@ -340,7 +362,8 @@ while running:
                 enemy_x = 0
                 enemy_y = 450
                 speed = 4
-                enemy_speed = 0.5
+                power_upx = 400
+                power_upy = 300
             elif current_level == 5:
                 current_level = 6
                 player_x = 20
@@ -348,7 +371,8 @@ while running:
                 enemy_x = 0
                 enemy_y = 450
                 speed = 4
-                enemy_speed = 0.5
+                power_upx = 400
+                power_upy = 300
             else:
                 game_won = True
 
@@ -374,19 +398,32 @@ while running:
     pygame.draw.rect(screen, GREEN, active_exit)
 
     #Draw powerups
-    for power_up in active_power_up:
+    if current_level == 4:
         pygame.draw.rect(screen, BUTTER_YELLOW, active_power_up)
-
-    for power_down in active_power_down:
         pygame.draw.rect(screen, SALMON, active_power_down)
+    if current_level == 5:
+        pygame.draw.rect(screen, BUTTER_YELLOW, active_power_up)
+        pygame.draw.rect(screen, SALMON, active_power_down)
+    if current_level == 6:
+        pygame.draw.rect(screen, BUTTER_YELLOW, active_power_up)
+        pygame.draw.rect(screen, SALMON, active_power_down)
+    
 
     # Draw player
     player_rect = pygame.Rect(player_x, player_y, player_size, player_size)
     pygame.draw.rect(screen, DARK_BLUE, player_rect)
 
     #Draw enemy
-    enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
-    pygame.draw.rect(screen, RED, enemy_rect)
+    if current_level == 4:
+        enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+        pygame.draw.rect(screen, RED, enemy_rect)
+    if current_level == 5:
+        enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+        pygame.draw.rect(screen, RED, enemy_rect)
+    if current_level == 6:
+        enemy_rect = pygame.Rect(enemy_x, enemy_y, enemy_size, enemy_size)
+        pygame.draw.rect(screen, RED, enemy_rect)
+
 
     if game_won:
         message = font.render("YOU WIN ALL LEVELS!", True, BLACK)
