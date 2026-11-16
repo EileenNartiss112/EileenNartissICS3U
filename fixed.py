@@ -188,12 +188,12 @@ def check_enemy_collision(enemy_rect, player_rect):
         return True
     return False
 
+pygame.mixer.init()
+pygame.mixer.music.load("maintheme.mp3")
+pygame.mixer.music.play() 
+
+
 while running:
-
-    pygame.mixer.init()
-    pygame.mixer.music.load("maintheme.mp3")
-    pygame.mixer.music.play()
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -398,3 +398,11 @@ while running:
 
 pygame.quit()
 sys.exit()
+
+
+
+
+
+#Please fail me.
+#I give up
+#Are you actually going to see this?
